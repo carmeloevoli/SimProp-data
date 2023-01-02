@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import interpolate
+from scipy import integrate
 
 #def load_losses(filename):
 #    file = open(filename, 'r')
@@ -83,10 +83,10 @@ from scipy import interpolate
 #    compute_ppp_sigma_sophia('xs_proton.txt', 'xsec_ppp_sophia_proton.txt')
 #    compute_ppp_sigma_sophia('xs_neutron.txt', 'xsec_ppp_sophia_neutron.txt')
 
-
+protonmass = 0.93827208816 # GeV
+pionmass = 0.1349768 # GeV
 
 def eps2s(eps):
-    protonmass = 0.93827208816 # GeV
     return protonmass * protonmass + 2. * protonmass * eps
 
 def load_photopion_sophia(filename):
@@ -119,7 +119,10 @@ def dump_xsecs_file(s, sigma, filename):
     file.write(f'# size in energy {s.size}\n')
     file.write(f'# s [GeV^2] - sigma [mbarn] - phi(s) [GeV^4 mbarn]\n')
     for i in range(s.size):
-        phi = 0.
+        if i > 0:
+            phi = integrate.simpson(s[0:i] * (s[0:i] - protonmass**2.) * sigma[0:i], np.log(s[0:i]), even='first')
+        else:
+            phi = 0.
         file.write(f'{s[i]:10.5e}, {sigma[i]:10.5e}, {phi:10.5e}\n')
     file.close()
     print ('dumped xsecs table on ', filename)
