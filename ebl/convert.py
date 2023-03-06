@@ -22,7 +22,7 @@ def load_Dominguez2011_file(z, original):
     for i in range(z.size):
         w, b = np.loadtxt(filename, usecols=(0, i+1), unpack=True, skiprows=10)
         n = brightness2density(b, w)
-        density[i] = n[::-1]
+        density[i] = np.power(1. + z[i], 3.) * n[::-1]
     return eps, density
     
 def load_Saldana2021_error_file(z, doLower):
@@ -38,9 +38,9 @@ def load_Saldana2021_error_file(z, doLower):
         n_fiducial = brightness2density(b_fiducial, w)
         n_error = brightness2density(b_error, w)
         if doLower:
-            density[i] = n_fiducial[::-1] - n_error[::-1]
+            density[i] = np.power(1. + z[i], 3.) * (n_fiducial[::-1] - n_error[::-1])
         else:
-            density[i] = n_fiducial[::-1] + n_error[::-1]
+            density[i] = np.power(1. + z[i], 3.) * (n_fiducial[::-1] + n_error[::-1])
     return eps, density
 
 def load_Gilmore2012_file(z, original):
@@ -64,7 +64,7 @@ def load_Gilmore2012_file(z, original):
     for i in range(z.size):
         w, b = np.loadtxt(filename, usecols=(0, i+1), unpack=True, skiprows=2)
         n = brightness2density(b, w)
-        density[i] = n[::-1] / (1. + z[i])**3.
+        density[i] = n[::-1] # / (1. + z[i])**3.
     return eps, density
     
 def compute_Igamma_integral(eps, n):
