@@ -11,7 +11,6 @@ def compute_sigma(E, t, h1, x1, w1, c):
             sigma[i] = h1 * np.exp(-(E[i] - x1)**2.0 / w1)
     return sigma
 
-
 def dump_v2r4(filename, doAlpha):
     url = 'tables/xsect_Gauss2_TALYS-restored.txt'
     
@@ -20,11 +19,11 @@ def dump_v2r4(filename, doAlpha):
     else:
         A, Z, t, h1, x1, w1, c = np.loadtxt(url, skiprows=1, unpack=True, usecols=(0,1,2,3,4,5,6))
         
-    E = np.logspace(-1, 3, 100) # MeV
+    E = np.logspace(0, 2, 1000) # MeV
     
     size = len(A)
     
-    f = open('tables/' + filename, 'w')
+    f = open('output/' + filename, 'w')
     f.write("#A - Z - sigma [mb]\n")
     
     for i in range(size):
