@@ -19,7 +19,9 @@ def dump_v2r4(filename, doAlpha):
     else:
         A, Z, t, h1, x1, w1, c = np.loadtxt(url, skiprows=1, unpack=True, usecols=(0,1,2,3,4,5,6))
         
-    E = np.logspace(0, 2, 1000) # MeV
+    print("t range : ", min(t), max(t))
+    
+    E = np.logspace(0, 2, 100) # MeV
     
     size = len(A)
     
@@ -29,8 +31,9 @@ def dump_v2r4(filename, doAlpha):
     for i in range(size):
         sigma = compute_sigma(E, t[i], h1[i], x1[i], w1[i], c[i])
         f.write('{},{},'.format(int(A[i]),int(Z[i])))
-        for s in sigma:
+        for s in sigma[:-1]:
             f.write('{:.5e},'.format(s))
+        f.write('{:.5e}'.format(sigma[-1]))
         f.write('\n')
     
     f.close()
