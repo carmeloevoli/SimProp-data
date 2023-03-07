@@ -12,12 +12,12 @@ def load_losses(filename):
 
     return np.array(x), np.array(y)
     
-def dump_losses():
+def dump_losses(outname):
     filename = 'tables/pairlossesInSimprop.txt'
     x, y = load_losses(filename)
     
     expected_length = 1001
-    file = open('losses_pair_BGG2002.txt', 'w')
+    file = open(outname, 'w')
     file.write('# size in energy %d\n' % expected_length)
     file.write('# log10(E/eV) - log10(b/year^-1) \n')
     
@@ -28,6 +28,7 @@ def dump_losses():
     
     assert(counter == expected_length)
     file.close()
+    print('dumped losses table on ', outname)
 
 if __name__== "__main__":
-    dump_losses()
+    dump_losses('losses_pair_BGG2002.txt')
